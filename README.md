@@ -1,5 +1,5 @@
 # Hangman_TCP
-Client/server play hangman using TCP
+Multiple clients concurrently playing hangman on a server using TCP
 
 ---SERVER---
 Open a terminal to act as a server and compile using this command:
