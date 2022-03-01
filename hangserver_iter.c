@@ -84,9 +84,8 @@ int main (int argc, char *argv[])
  		if(clntSock < 0)
  			DieWithSystemMessage("Error on accept");
  			
- 		// TBD - I don't know if dealt with fork/zombies properly yet but this is working for now
+ 		// Used for dealing with new child processes
  		pid = fork();
- 		waitpid(-1, &status, WNOHANG);
  		
  		// Check for an inappropriate pid value and give the appropriate error message
  		if(pid < 0)
@@ -102,6 +101,9 @@ int main (int argc, char *argv[])
  			exit(0);				// End the connection
  		}
  		
+		// Used for dealing with zombie processes
+		waitpid(-1, &status, WNOHANG);
+		
  		// Close the client's socket
  		close(clntSock);
  		
