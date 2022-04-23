@@ -34,7 +34,8 @@ int main (int argc, char * argv [])
 
 void createSocket()
 {
-	sock = socket (AF_INET, SOCK_STREAM, 0);
+	// Create a socket that supports dual stack
+	sock = socket (AF_UNSPEC, SOCK_STREAM, 0);
 	
 	if (sock <0) 
 	{
@@ -45,8 +46,10 @@ void createSocket()
 
 void getHostInfo(char * name)
 {
+	/* Find information about the host*/
 	host_info = gethostbyname(server_name);
 	
+	// Check if information about the host cannot be found
  	if (host_info == NULL) 
  	{
  		fprintf (stderr, "%s: unknown host:%s \n", name, server_name);
@@ -56,6 +59,7 @@ void getHostInfo(char * name)
 
 void constructServerAddress()
 {
+	// Contruct the address of the found connection
 	server.sin_family = host_info->h_addrtype;
  	memcpy ((char *) & server.sin_addr, host_info->h_addr, host_info->h_length);
  	server.sin_port = htons (servPort);
@@ -63,6 +67,7 @@ void constructServerAddress()
 
 void establishConnection()
 {
+	// Connect socket to server socket
  	if (connect (sock, (struct sockaddr *) & server, sizeof server) <0) 
 	{
  		perror ("Connecting to server");

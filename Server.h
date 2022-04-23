@@ -25,26 +25,26 @@
 #include "Assignment.h"
 
 //These are the variables used in this file
-extern time_t time ();			// description
+extern time_t time ();		
 in_port_t servPort;			// This will hold which port the server is using
-int svrSock;				// description
-int clntSock;				// description
-int client_len;			// description
-struct sockaddr_in server;		// description
-struct sockaddr_in client;		// description
+int svrSock;				
+int clntSock;				
+int client_len;			
+struct sockaddr_in server;		
+struct sockaddr_in client;		
 char clientAddress[BUFSIZE];		// The address of the client
 ssize_t numBytes;			// Used for error handling
-pid_t pid;				// description
-int status;				// description
+pid_t pid;				
+int status;				
 
 //These are the functions used in this file
-void createSocket();			// description
-void constructServerAddress();	// description
-void assignSocketToAddress();		// description
-void findConnection(); 		// description
-int acceptConnection();		// description
-void newClientInfo();			// description
-void play_hangman(int in, int out);	// description
-void sendFinalMessage();		// description
+void createSocket();			
+void constructServerAddress();	
+void assignSocketToAddress();		
+void findConnection(); 		
+int acceptConnection();		
+void newClientInfo();			
+void play_hangman(int in, int out);	
+void sendFinalMessage();		
 
 #endif // SERVER_H

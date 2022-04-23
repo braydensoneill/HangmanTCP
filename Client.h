@@ -26,8 +26,8 @@ struct sockaddr_in server;	// server's address is assembled here
 struct hostent * host_info;	// host's info is stored here
 int sock;			// socket descriptor for client
 int count;			// simple count variable used for loop
-char i_line[LINESIZE];		// description
-char o_line[LINESIZE];		// description
+char i_line[LINESIZE];
+char o_line[LINESIZE];	
 char * server_name;		// name of server
 in_port_t servPort;		// descriptionn
 

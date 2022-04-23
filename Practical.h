@@ -12,7 +12,7 @@
 #include <sys/socket.h>
 
 //These are the variables used in this file
-# define NUM_OF_WORDS (sizeof (word) / sizeof (word [0]))		// description
+# define NUM_OF_WORDS (sizeof (word) / sizeof (word [0]))
 # define MAXLEN 128							// Max string size
 # define BUFSIZE 512							// Max size of buffer
 # define STDIN 0							// file decriptor for standard input

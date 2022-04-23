@@ -24,8 +24,6 @@ void play_hangman (int in, int out)
  		checkLetter();
  		
  		printPartWord();
- 		
- 		//sendAttempt(file_descriptor_out);
  			
  		checkGameOver();
  	}
@@ -54,12 +52,13 @@ void initialisePartWord()
  	{
  		part_word[i]='-';
  	}
- 	
-	//part_word[i] = '\0';
 }
 
 void requestInput(int fd_o)
 {
+	/* part_word can only be added to outbuff as %hhu, but it didn't work properly
+	Made a new string variable it can be added as %s
+	It works properly this way*/
  	char* currentAttempt = part_word;
 	sprintf (outbuf, "\nLives: %d | Attempt: %s \nEnter a letter: ", lives, currentAttempt);
  	write (fd_o, outbuf, strlen(outbuf));
@@ -67,6 +66,7 @@ void requestInput(int fd_o)
 
 void readInput(int fd_i)
 {
+	// Read input from file_descriptor
 	while (read (fd_i, guess, MAXLEN) <0) 
 	{
  		if (errno != EINTR)
@@ -78,6 +78,8 @@ void readInput(int fd_i)
 
 void checkLetter()
 {
+	/* Check the if the answer contains the guessed letter */
+	
 	good_guess = 0;
 	
  	for (i = 0; i < word_length; i++) 
@@ -91,8 +93,6 @@ void checkLetter()
  	
  	if (!good_guess) 
  			lives--;
- 			
- 	//printPartWord();
 }
 
 void checkGameOver()

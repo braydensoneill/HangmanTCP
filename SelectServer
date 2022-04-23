@@ -1,4 +1,4 @@
- /* Network server for hangman game */
+/* Network server for hangman game */
  /* File: Server.c */
 
 // Project header files
@@ -34,38 +34,48 @@ int main (int argc, char *argv[])
 
 	// Allow the server to start looking for connections 	
  	findConnection();
+ 	
+ 	fd_set current_sockets, ready_sockets;
+ 	
+ 	FD_ZERO(&current_sockets);
+ 	FD_SET(clntSock, &current_sockets);
 
 	// Create an infinite loop so the server can continuosly ssearch for clients
  	while(1)
  	{
- 		// Assign the accepted socket's address to the 'clntSock' sockaddr variable
- 		clntSock = acceptConnection();
+ 		ready_sockets = current_sockets;
  		
- 		// Check for an inappropriate client socket value and give appropriate error message
- 		if(clntSock < 0)
- 			DieWithSystemMessage("Error on accept");
- 			
- 		// Start pid
- 		pid = fork();
+ 		if(select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0) {
+ 			DieWithSystemMessage("Select error");
+ 		}
  		
- 		// Check for an inappropriate pid value and give the appropriate error message
- 		if(pid < 0)
- 			DieWithSystemMessage("Error on fork");
- 			
- 		// Indepentandlty/concurrently dealing with new clients
- 		if(pid == 0) {
- 			srand ((int) time ((long *) 0));	// Randomise seed for each new client
- 			close(svrSock);			// Close server's socket
- 			newClientInfo();			// Find information of new client
- 			play_hangman(clntSock, clntSock);	// Play the hangman game, sending/reading data to/from client
- 			sendFinalMessage();			// Send a final message before the connection ends
- 			exit(0);				// End the connection
+ 		for(int i = 0; i < FD_SETSIZE; i++) 
+ 		{
+ 			if(FD_ISSET(i, &ready_sockets)) {
+ 				
+ 				if(i == svrSock) 
+ 				{
+ 					clntSock = acceptConnection();
+ 					
+ 					if(clntSock < 0) {
+ 						DieWithSystemMessage("Error on accept");
+ 					
+ 					FD_SET(clntSock, &current_sockets);
+ 				} 
+ 				
+ 				else 
+ 				{
+ 					srand ((int) time ((long *) 0));	// Randomise seed for each new client
+		 			newClientInfo();			// Find information of new client
+		 			play_hangman(i,i);	// Play the hangman game, sending/reading data to/from client
+		 			sendFinalMessage();			// Send a final message before the connection ends
+		 			FD_CLR(i, &current_sockets);
+ 				}
+ 			}
  		}
  	
  		// Close the client's socket
  		close(clntSock);
- 		
- 		waitpid(-1, &status, WNOHANG);
  		
  	}//end of while
  	
@@ -75,7 +85,7 @@ int main (int argc, char *argv[])
 void createSocket()
 {
 	// Create a socket that supports dual stack
-	svrSock = socket (AF_UNSPEC, SOCK_STREAM, 0);	// 0 or IPPROTO_TCP 
+	svrSock = socket (AF_UNSPEC SOCK_STREAM, 0);	// 0 or IPPROTO_TCP 
 
  	if (svrSock <0)
  		DieWithSystemMessage("Creating stream socket");
@@ -116,20 +126,18 @@ int acceptConnection(int sock)
 
 void newClientInfo()
 {
-	// String to contain client address
-	char findClientAddress[INET_ADDRSTRLEN];
+	char findClientAddress[INET_ADDRSTRLEN]; // String to contain client address
 	
 	//Place this data into the clientAddress variable
 	for(int i = 0; i < sizeof(findClientAddress); i++)
 		clientAddress[i] = findClientAddress[i];
 	
 	//Conver numeric address into text string suitable for presentation
-	if (inet_ntop(AF_UNSPEC, &client.sin_addr.s_addr, clientAddress, sizeof(clientAddress)) != NULL)
+	if (inet_ntop(AF_INET, &client.sin_addr.s_addr, clientAddress, sizeof(clientAddress)) != NULL)
 	{
 		printf("(%s-%d)\n", clientAddress, ntohs(client.sin_port));
 		printf("	Handling New Client\n");
 	}
-	
 	//If none is found, print an error
 	else
 		puts("Unable to get client address");
