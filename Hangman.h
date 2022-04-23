@@ -40,6 +40,8 @@ void checkLetter();
 void checkGameOver();
 void gameOverWin();
 void gameOverLose();
+void printPartWord();
+void sendPartWord();
 
 #endif // HANGMAN_H_
 

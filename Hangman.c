@@ -14,20 +14,20 @@ void play_hangman (int in, int out)
  	setRandomWord();
  	initialisePartWord();
  	
- 	//printf("%hhn", part_word);
- 	
- 	requestInput(file_descriptor_out);
-
 	/* Get a letter from player guess */
  	while (game_state == 'I')
  	{
+ 		requestInput(file_descriptor_out);
+ 		
 		readInput(file_descriptor_in);
  		
  		checkLetter();
+ 		
+ 		printPartWord();
+ 		
+ 		//sendAttempt(file_descriptor_out);
  			
  		checkGameOver();
- 		
- 		requestInput(file_descriptor_out);
  	}
 }
 
@@ -60,7 +60,8 @@ void initialisePartWord()
 
 void requestInput(int fd_o)
 {
-	sprintf (outbuf, "\nLives: %d | Attempt: %hhn \nEnter a letter: ", lives, part_word);
+ 	char* currentAttempt = part_word;
+	sprintf (outbuf, "\nLives: %d | Attempt: %s \nEnter a letter: ", lives, currentAttempt);
  	write (fd_o, outbuf, strlen(outbuf));
 }
 
@@ -90,6 +91,8 @@ void checkLetter()
  	
  	if (!good_guess) 
  			lives--;
+ 			
+ 	//printPartWord();
 }
 
 void checkGameOver()
@@ -116,10 +119,18 @@ void gameOverWin()
 void gameOverLose()
 {
 	game_state = 'L'; /* L ==> User Lost */
- 	strcpy (part_word, whole_word); /* User Show the word	 */
  	printf("(%s-%d)\n", clientAddress, ntohs(client.sin_port));
  	printf("	Game Over\n");
  	printf("	State: defeat\n");
+ 	printf("	Attempt: %s\n", part_word);
+ 	printf("	Answer: %s\n\n", whole_word);
+}
+
+void printPartWord()
+{
+ 	printf("(%s-%d)\n", clientAddress, ntohs(client.sin_port));
+ 	printf("	Client has input a letter\n");
+ 	printf("	Letter: %s", guess);
  	printf("	Attempt: %s\n", part_word);
  	printf("	Answer: %s\n\n", whole_word);
 }
