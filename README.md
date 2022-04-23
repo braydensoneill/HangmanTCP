@@ -3,7 +3,10 @@ Multiple clients concurrently playing hangman on a server using TCP
 
 ---SERVER---
 Open a terminal to act as a server and compile using this command:
-  gcc Server.c DieWithMessage.c Hangman.c -o hang_server.
+  gcc ForkServer.c DieWithMessage.c Hangman.c -o hang_server
+  OR
+  gcc SelectServer.c DieWithMessage.c Hangman.c -o hang_server
+  
 
 You can get the server running using this command:
   ./hang_server 4096.
