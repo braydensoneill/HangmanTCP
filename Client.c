@@ -35,7 +35,7 @@ int main (int argc, char * argv [])
 void createSocket()
 {
 	// Create a socket that supports dual stack
-	sock = socket (AF_UNSPEC, SOCK_STREAM, 0);
+	sock = socket (AF_INET, SOCK_STREAM, 0);
 	
 	if (sock <0) 
 	{

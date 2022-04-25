@@ -75,7 +75,7 @@ int main (int argc, char *argv[])
 void createSocket()
 {
 	// Create a socket that supports dual stack
-	svrSock = socket (AF_UNSPEC, SOCK_STREAM, 0);	// 0 or IPPROTO_TCP 
+	svrSock = socket (AF_INET, SOCK_STREAM, 0);	// 0 or IPPROTO_TCP 
 
  	if (svrSock <0)
  		DieWithSystemMessage("Creating stream socket");
@@ -84,7 +84,7 @@ void createSocket()
 void constructServerAddress()
 {
 	// Construct the server address to handle dual stack
-	server.sin_family = AF_UNSPEC;
+	server.sin_family = AF_INET;
  	server.sin_addr.s_addr = htonl(INADDR_ANY);
  	server.sin_port = htons(servPort);
 }
@@ -124,7 +124,7 @@ void newClientInfo()
 		clientAddress[i] = findClientAddress[i];
 	
 	//Conver numeric address into text string suitable for presentation
-	if (inet_ntop(AF_UNSPEC, &client.sin_addr.s_addr, clientAddress, sizeof(clientAddress)) != NULL)
+	if (inet_ntop(AF_INET, &client.sin_addr.s_addr, clientAddress, sizeof(clientAddress)) != NULL)
 	{
 		printf("(%s-%d)\n", clientAddress, ntohs(client.sin_port));
 		printf("	Handling New Client\n");
@@ -138,11 +138,12 @@ void newClientInfo()
 void sendFinalMessage()
 {
 	// Variables used for the goodbye message
-	char finalMessage[100] = "\n\nConnection closed with cookie: ";	// String
+	char finalMessage[100] = "\n\nGame Over!\nConnection closed with cookie: ";	// String
 	char cookie[50];						
 	int randomNumber = rand() + 10000000 & 999999999;	//Random number between x and y.
 	int messageLen;
 			
+		
 	// String concatination for final message
 	sprintf(cookie, "%d", randomNumber);	// Store the randomNumber value in the cooke variable
 	strcat(finalMessage, cookie);	

@@ -31,7 +31,7 @@ int svrSock;
 int clntSock;				
 int client_len;			
 struct sockaddr_in server;		
-struct sockaddr_in client;		
+struct sockaddr_in client;	
 char clientAddress[BUFSIZE];		// The address of the client
 ssize_t numBytes;			// Used for error handling
 pid_t pid;				
